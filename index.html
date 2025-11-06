@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Free Image Resizer - Get 3 Sizes Instantly</title>
+    <meta
+      name="description"
+      content="Upload once, get 3 perfectly optimized image sizes. Free serverless image resizer with instant email delivery."
+    />
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI",
+          Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 30px;
+      }
+
+      .container {
+        background: white;
+        border-radius: 24px;
+        box-shadow: 0 25px 60px rgba(0, 0, 0, 0.22);
+        max-width: 650px;
+        width: 100%;
+        padding: 45px;
+        animation: fadeIn 0.5s ease-out;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.98);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      h1 {
+        color: #1e293b;
+        margin-bottom: 10px;
+        font-size: 34px;
+        text-align: center;
+      }
+
+      .subtitle {
+        color: #64748b;
+        text-align: center;
+        margin-bottom: 30px;
+        font-size: 17px;
+      }
+
+      .features {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+      }
+
+      .feature {
+        text-align: center;
+        padding: 18px;
+        background: #eff6ff;
+        border-radius: 12px;
+        border: 1px solid #bfdbfe;
+        transition: transform 0.2s, box-shadow 0.2s;
+      }
+
+      .feature:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(37, 99, 235, 0.15);
+      }
+
+      .feature-icon {
+        font-size: 26px;
+        margin-bottom: 6px;
+      }
+
+      .feature-text {
+        font-size: 13px;
+        color: #1e3a8a;
+        font-weight: 600;
+      }
+
+      .upload-area {
+        border: 3px dashed #bcd4ff;
+        border-radius: 16px;
+        padding: 45px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 20px;
+        background: #f1f5ff;
+      }
+
+      .upload-area:hover {
+        background: #e0edff;
+        border-color: #3b82f6;
+      }
+
+      .upload-area.dragover {
+        border-color: #2563eb;
+        background: #dbeafe;
+        transform: scale(1.02);
+      }
+
+      .upload-area.uploading {
+        pointer-events: none;
+        opacity: 0.6;
+      }
+
+      .upload-icon {
+        font-size: 48px;
+        margin-bottom: 10px;
+        display: block;
+      }
+
+      input[type="file"] {
+        display: none;
+      }
+
+      input[type="email"] {
+        width: 100%;
+        padding: 15px;
+        border: 2px solid #d1d5db;
+        border-radius: 12px;
+        font-size: 16px;
+        margin-bottom: 20px;
+        transition: all 0.3s;
+        outline: none;
+      }
+
+      input[type="email"]:focus {
+        border-color: #2563eb;
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+      }
+
+      .submit-btn {
+        width: 100%;
+        padding: 15px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        color: white;
+        border: none;
+        border-radius: 12px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.2s;
+      }
+
+      .submit-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 12px 25px rgba(37, 99, 235, 0.35);
+      }
+
+      .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      .submit-btn.success {
+        animation: celebrate 0.5s ease-in-out;
+      }
+
+      @keyframes celebrate {
+        0%,
+        100% {
+          transform: scale(1);
+        }
+        25% {
+          transform: scale(1.05);
+        }
+        50% {
+          transform: scale(1.02);
+        }
+        75% {
+          transform: scale(1.05);
+        }
+      }
+
+      .access-btn {
+        background: linear-gradient(135deg, #14b8a6 0%, #0d9488 100%);
+        margin-top: 12px;
+      }
+
+      .access-btn:hover:not(:disabled) {
+        box-shadow: 0 12px 25px rgba(20, 184, 166, 0.35);
+      }
+
+      .preview {
+        margin-top: 20px;
+        text-align: center;
+      }
+
+      .preview img {
+        max-width: 100%;
+        max-height: 300px;
+        border-radius: 12px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+        animation: fadeIn 0.3s;
+      }
+
+      .file-info {
+        margin-top: 15px;
+        margin-bottom: 15px;
+        font-size: 14px;
+        color: #4a5568;
+        text-align: center;
+      }
+
+      .spinner {
+        width: 40px;
+        height: 40px;
+        margin: 15px auto;
+        border: 4px solid #e5e7eb;
+        border-top: 4px solid #2563eb;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+        display: none;
+      }
+
+      .spinner.active {
+        display: block;
+      }
+
+      @keyframes spin {
+        0% {
+          transform: rotate(0deg);
+        }
+        100% {
+          transform: rotate(360deg);
+        }
+      }
+
+      .status {
+        margin-top: 20px;
+        padding: 15px;
+        border-radius: 12px;
+        text-align: center;
+        font-weight: 600;
+        display: none;
+        white-space: pre-line;
+      }
+
+      .status.success {
+        background: #dcfce7;
+        color: #14532d;
+        display: block;
+      }
+      .status.error {
+        background: #fee2e2;
+        color: #7f1d1d;
+        display: block;
+      }
+      .status.processing {
+        background: #dbeafe;
+        color: #1e40af;
+        display: block;
+      }
+      .status.warning {
+        background: #fef3c7;
+        color: #7c2d12;
+        display: block;
+      }
+      .status.info {
+        background: #ccfbf1;
+        color: #134e4a;
+        display: block;
+      }
+
+      footer {
+        margin-top: 30px;
+        text-align: center;
+        color: #94a3b8;
+        font-size: 15px;
+      }
+
+      /* Modal Styles */
+      .modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.55);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        animation: fadeIn 0.3s;
+        z-index: 1000;
+      }
+
+      .modal.show {
+        display: flex;
+      }
+
+      .modal-content {
+        background: #ffffff;
+        padding: 35px;
+        width: 90%;
+        max-width: 500px;
+        border-radius: 18px;
+        animation: popUp 0.3s ease-out;
+        max-height: 80vh;
+        overflow-y: auto;
+      }
+
+      @keyframes popUp {
+        from {
+          transform: translateY(20px);
+          opacity: 0;
+        }
+        to {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+
+      .modal-content h2 {
+        color: #1e293b;
+        margin-bottom: 15px;
+        text-align: center;
+      }
+
+      .modal-content p {
+        color: #334155;
+        line-height: 1.8;
+        text-align: left;
+        font-size: 15px;
+      }
+
+      .modal-content strong {
+        color: #1e3a8a;
+      }
+
+      .close-btn {
+        width: 100%;
+        margin-top: 25px;
+        background: linear-gradient(135deg, #2563eb 0%, #3b82f6 100%);
+        color: white;
+        padding: 14px 20px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        font-weight: 600;
+        font-size: 16px;
+        transition: all 0.2s;
+      }
+
+      .close-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 16px rgba(37, 99, 235, 0.3);
+      }
+
+      .tips-btn {
+        background: none;
+        border: none;
+        margin-top: 15px;
+        cursor: pointer;
+        color: #2563eb;
+        font-weight: 600;
+        font-size: 15px;
+        text-decoration: underline;
+        transition: color 0.2s;
+      }
+
+      .tips-btn:hover {
+        color: #1e40af;
+      }
+
+      /* Mobile Responsive */
+      @media (max-width: 640px) {
+        .features {
+          grid-template-columns: 1fr;
+          gap: 12px;
+        }
+
+        h1 {
+          font-size: 28px;
+        }
+
+        .container {
+          padding: 30px 20px;
+        }
+
+        .upload-area {
+          padding: 30px 20px;
+        }
+
+        .modal-content {
+          padding: 25px;
+        }
+      }
+
+      /* Accessibility */
+      *:focus {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+      }
+
+      button:focus,
+      input:focus {
+        outline: 2px solid #2563eb;
+        outline-offset: 2px;
+      }
+    </style>
+  </head>
+
+  <body>
+    <div class="container">
+      <h1>🎨 Free Image Resizer</h1>
+      <p class="subtitle">Upload once → get 3 perfectly optimized sizes</p>
+
+      <div class="features">
+        <div class="feature">
+          <div class="feature-icon">📐</div>
+          <div class="feature-text">150×150<br />(Thumbnail)</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">📱</div>
+          <div class="feature-text">500×500<br />(Medium)</div>
+        </div>
+        <div class="feature">
+          <div class="feature-icon">🖼️</div>
+          <div class="feature-text">1200×1200<br />(Large)</div>
+        </div>
+      </div>
+
+      <form id="uploadForm">
+        <div class="upload-area" id="uploadArea">
+          <span class="upload-icon">📤</span>
+          <h3 style="margin-bottom: 8px">Click or Drop Image Here</h3>
+          <p style="color: #64748b; font-size: 14px">
+            JPG, PNG, GIF, WebP • Max 10MB
+          </p>
+          <input
+            type="file"
+            id="fileInput"
+            accept="image/jpeg,image/jpg,image/png,image/gif,image/webp"
+            aria-label="Upload image file"
+          />
+        </div>
+
+        <div class="preview" id="preview"></div>
+        <div class="file-info" id="fileInfo"></div>
+
+        <input
+          type="email"
+          id="emailInput"
+          placeholder="📧 Enter email to receive download links"
+          required
+          aria-label="Email address"
+        />
+
+        <button type="submit" class="submit-btn" id="submitBtn">
+          🚀 Resize My Image
+        </button>
+
+        <button
+          type="button"
+          class="submit-btn access-btn"
+          id="accessBtn"
+          style="display: none"
+          aria-label="Request access to the service"
+        >
+          ✉️ Request Access (Free)
+        </button>
+
+        <button
+          type="button"
+          class="tips-btn"
+          id="tipsBtn"
+          aria-label="Show tips"
+        >
+          💡 How It Works
+        </button>
+
+        <div
+          class="spinner"
+          id="spinner"
+          role="status"
+          aria-label="Loading"
+        ></div>
+        <div class="status" id="status" role="alert"></div>
+      </form>
+
+      <footer>Powered by Merem • Free Forever ✅</footer>
+    </div>
+
+    <!-- Tips Modal -->
+    <div
+      class="modal"
+      id="modal"
+      role="dialog"
+      aria-modal="true"
+      aria-labelledby="modalTitle"
+    >
+      <div class="modal-content">
+        <h2 id="modalTitle">💡 How It Works</h2>
+        <p>
+          <strong>Step 1: Request Access</strong><br />
+          Enter your email and click "Request Access". You'll receive a
+          verification email from AWS SNS.<br /><br />
+
+          <strong>Step 2: Confirm Email</strong><br />
+          Click the confirmation link in your email. This adds you to the
+          approved whitelist.<br /><br />
+
+          <strong>Step 3: Upload & Resize</strong><br />
+          Return to this page, upload your image, and click "Resize My
+          Image".<br /><br />
+
+          <strong>Step 4: Check Email</strong><br />
+          Your 3 resized images will be sent to your email in 1-2 minutes with
+          download links (valid for 7 days)!<br /><br />
+
+          ⚠️ <strong>Important:</strong> Don't click "Unsubscribe" in our emails
+          or you'll lose access. If you accidentally unsubscribe, just request
+          access again!
+        </p>
+
+        <button class="close-btn" id="closeModal">Got it! ✅</button>
+      </div>
+    </div>
+
+    <script>
+      // ==========================================
+      // CONFIGURATION - REPLACE WITH YOUR API URLs
+      // ==========================================
+      const UPLOAD_API =
+        "https://3a881ge2mb.execute-api.ca-central-1.amazonaws.com/prod/upload";
+      const ACCESS_API =
+        "https://3a881ge2mb.execute-api.ca-central-1.amazonaws.com/prod/request-access";
+
+      // ==========================================
+      // DOM ELEMENTS
+      // ==========================================
+      const uploadArea = document.getElementById("uploadArea");
+      const fileInput = document.getElementById("fileInput");
+      const emailInput = document.getElementById("emailInput");
+      const submitBtn = document.getElementById("submitBtn");
+      const accessBtn = document.getElementById("accessBtn");
+      const preview = document.getElementById("preview");
+      const fileInfo = document.getElementById("fileInfo");
+      const status = document.getElementById("status");
+      const spinner = document.getElementById("spinner");
+      const form = document.getElementById("uploadForm");
+      const modal = document.getElementById("modal");
+      const tipsBtn = document.getElementById("tipsBtn");
+      const closeModal = document.getElementById("closeModal");
+
+      let selectedFile = null;
+
+      // ==========================================
+      // MODAL CONTROLS
+      // ==========================================
+      tipsBtn.addEventListener("click", () => {
+        modal.classList.add("show");
+      });
+
+      closeModal.addEventListener("click", () => {
+        modal.classList.remove("show");
+      });
+
+      // Close modal when clicking backdrop
+      modal.addEventListener("click", (e) => {
+        if (e.target === modal) {
+          modal.classList.remove("show");
+        }
+      });
+
+      // Close modal with Escape key
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "Escape" && modal.classList.contains("show")) {
+          modal.classList.remove("show");
+        }
+      });
+
+      // ==========================================
+      // FILE UPLOAD HANDLERS
+      // ==========================================
+      uploadArea.addEventListener("click", () => fileInput.click());
+
+      uploadArea.addEventListener("dragover", (e) => {
+        e.preventDefault();
+        uploadArea.classList.add("dragover");
+      });
+
+      uploadArea.addEventListener("dragleave", () => {
+        uploadArea.classList.remove("dragover");
+      });
+
+      uploadArea.addEventListener("drop", (e) => {
+        e.preventDefault();
+        uploadArea.classList.remove("dragover");
+        const files = e.dataTransfer.files;
+        if (files.length > 0) {
+          handleFile(files[0]);
+        }
+      });
+
+      fileInput.addEventListener("change", (e) => {
+        if (e.target.files.length > 0) {
+          handleFile(e.target.files[0]);
+        }
+      });
+
+      // Reset button UI when new file is selected
+      fileInput.addEventListener("change", () => {
+        resetSubmitButton();
+      });
+
+      // ==========================================
+      // FILE HANDLING
+      // ==========================================
+      function handleFile(file) {
+        const validTypes = [
+          "image/jpeg",
+          "image/jpg",
+          "image/png",
+          "image/gif",
+          "image/webp",
+        ];
+
+        if (!validTypes.includes(file.type)) {
+          showStatus(
+            "❌ Please upload a valid image (JPG, PNG, GIF, or WebP)",
+            "error"
+          );
+          return;
+        }
+
+        if (file.size > 10 * 1024 * 1024) {
+          showStatus("❌ File too large. Maximum size is 10MB", "error");
+          return;
+        }
+
+        selectedFile = file;
+
+        // Show preview
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          preview.innerHTML = `<img src="${e.target.result}" alt="Preview of ${file.name}">`;
+        };
+        reader.readAsDataURL(file);
+
+        // Show file info with icon
+        const sizeMB = (file.size / (1024 * 1024)).toFixed(2);
+        const fileIcon = getFileIcon(file.name);
+        fileInfo.innerHTML = `${fileIcon} ${file.name} • ${sizeMB} MB`;
+
+        // Reset status and hide access button
+        status.style.display = "none";
+        accessBtn.style.display = "none";
+        resetSubmitButton();
+      }
+
+      function getFileIcon(filename) {
+        const ext = filename.split(".").pop().toLowerCase();
+        const icons = {
+          jpg: "🖼️",
+          jpeg: "🖼️",
+          png: "🎨",
+          gif: "🎬",
+          webp: "🌐",
+        };
+        return icons[ext] || "📎";
+      }
+
+      // ==========================================
+      // FORM SUBMISSION (UPLOAD)
+      // ==========================================
+      form.addEventListener("submit", async (e) => {
+        e.preventDefault();
+
+        if (!selectedFile) {
+          showStatus("⚠️ Please select an image first", "warning");
+          return;
+        }
+
+        if (!emailInput.value) {
+          showStatus("⚠️ Please enter your email address", "warning");
+          emailInput.focus();
+          return;
+        }
+
+        // Disable form and show loading state
+        submitBtn.disabled = true;
+        submitBtn.textContent = "⏳ Processing...";
+        spinner.classList.add("active");
+        uploadArea.classList.add("uploading");
+        showStatus("📤 Uploading your image...", "processing");
+
+        try {
+          const base64Image = await fileToBase64(selectedFile);
+
+          const response = await fetch(UPLOAD_API, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: emailInput.value,
+              image: base64Image,
+              fileName: selectedFile.name,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            // Success!
+            showStatus(
+              `✅ Success! Your resized images will be sent to:\n${emailInput.value}\n\nCheck your inbox in 1-2 minutes!`,
+              "success"
+            );
+
+            updateButtonAfterSuccess();
+
+            // Reset form after 3 seconds
+            setTimeout(() => {
+              const savedEmail = emailInput.value;
+              form.reset();
+              emailInput.value = savedEmail; // Keep email for convenience
+              preview.innerHTML = "";
+              fileInfo.innerHTML = "";
+              selectedFile = null;
+              resetSubmitButton();
+              status.style.display = "none";
+            }, 3000);
+          } else if (
+            response.status === 403 &&
+            data.action === "join_waitlist"
+          ) {
+            // Not whitelisted
+            showStatus(
+              `🔒 ${data.message}\n\nClick "Request Access" below to get verified instantly!`,
+              "warning"
+            );
+            accessBtn.style.display = "block";
+          } else {
+            // Other error
+            showStatus(
+              `❌ Error: ${data.error || data.message || "Upload failed"}`,
+              "error"
+            );
+          }
+        } catch (error) {
+          console.error("Upload error:", error);
+          showStatus(
+            `❌ Connection error: ${error.message}\n\nPlease check your internet connection and try again.`,
+            "error"
+          );
+        } finally {
+          submitBtn.disabled = false;
+          if (submitBtn.textContent === "⏳ Processing...") {
+            resetSubmitButton();
+          }
+          spinner.classList.remove("active");
+          uploadArea.classList.remove("uploading");
+        }
+      });
+
+      // ==========================================
+      // ACCESS REQUEST
+      // ==========================================
+      accessBtn.addEventListener("click", async () => {
+        if (!emailInput.value) {
+          showStatus("⚠️ Please enter your email address", "warning");
+          emailInput.focus();
+          return;
+        }
+
+        accessBtn.disabled = true;
+        accessBtn.textContent = "⏳ Sending...";
+        spinner.classList.add("active");
+
+        try {
+          const response = await fetch(ACCESS_API, {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: emailInput.value,
+            }),
+          });
+
+          const data = await response.json();
+
+          if (response.ok) {
+            if (data.status === "approved") {
+              showStatus("✅ " + data.message, "success");
+              accessBtn.style.display = "none";
+            } else {
+              showStatus(
+                `📬 ${data.message}\n\n✅ Check your inbox (including spam folder)\n✅ Click the confirmation link\n✅ Return here and upload your image!`,
+                "info"
+              );
+            }
+          } else {
+            showStatus(
+              `❌ Error: ${data.error || "Failed to request access"}`,
+              "error"
+            );
+          }
+        } catch (error) {
+          console.error("Access request error:", error);
+          showStatus(`❌ Connection error: ${error.message}`, "error");
+        } finally {
+          accessBtn.disabled = false;
+          accessBtn.textContent = "✉️ Request Access (Free)";
+          spinner.classList.remove("active");
+        }
+      });
+
+      // ==========================================
+      // UTILITY FUNCTIONS
+      // ==========================================
+      function fileToBase64(file) {
+        return new Promise((resolve, reject) => {
+          const reader = new FileReader();
+          reader.readAsDataURL(file);
+          reader.onload = () => resolve(reader.result);
+          reader.onerror = (error) => reject(error);
+        });
+      }
+
+      function showStatus(message, type) {
+        status.textContent = message;
+        status.className = `status ${type}`;
+        status.style.display = "block";
+      }
+
+      function updateButtonAfterSuccess() {
+        submitBtn.textContent = "✅ Check Your Email";
+        submitBtn.style.background =
+          "linear-gradient(135deg, #14b8a6 0%, #0d9488 100%)";
+        submitBtn.classList.add("success");
+      }
+
+      function resetSubmitButton() {
+        submitBtn.textContent = "🚀 Resize My Image";
+        submitBtn.style.background =
+          "linear-gradient(135deg, #2563eb 0%, #3b82f6 100%)";
+        submitBtn.classList.remove("success");
+      }
+
+      // ==========================================
+      // INITIALIZE
+      // ==========================================
+      console.log("🎨 Free Image Resizer loaded successfully!");
+      console.log("📧 Upload API:", UPLOAD_API);
+      console.log("🔐 Access API:", ACCESS_API);
+    </script>
+  </body>
+</html>
