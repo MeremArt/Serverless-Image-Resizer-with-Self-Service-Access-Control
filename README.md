@@ -105,4 +105,4 @@ S3: 5GB storage + 20,000 GET + 2,000 PUT
 SNS: 1,000 email notifications free
 API Gateway: 1M requests free (first 12 months)
 
-Made with ❤️ and ☕ using AWS Serverless
+Made with ❤️ and ☕ using AWS Serverless by merem
